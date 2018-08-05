@@ -111,3 +111,7 @@ b{
   color: #fff;
   text-align: center;
 }
+
+.click{
+  background: rgba(255, 253, 109, 0.3);
+}

@@ -28,11 +28,21 @@ Make Calendar width React
 
 > 2018.08.05
   - title : CSS 추가
-  - content : 이미 get_month에서 상태를 변환시키니깐
-              componentDidMount에서 find_today가 필요가 없었다.
-              해당 월이 아닌 부분은 연하게 표현하기 위해서 get_month 2번째 for문에서 넘기는 객체에 include 추가.
+  - content : 해당 월이 아닌 부분은 연하게 표현하기 위해서 get_month 2번째 for문에서 넘기는 객체에 include 추가.
               클릭하면 해당 fulldate 콘솔에 출력.
               CSS 정리
-  - idea : 원래는 이런 모양을 기획했던건 아닌데, 작업할 때 날짜를 확인하려고 맥북 달력을 참고하다보니,
+  - idea : (지난 Q에 대한 A : 이미 get_month에서 상태를 변환시키니깐 componentDidMount에서 find_today가 필요가 없었다.)
+           원래는 이런 모양을 기획했던건 아닌데, 작업할 때 날짜를 확인하려고 맥북 달력을 참고하다보니,
            자연스럽게 맥 달력을 벤치마킹 만들게됬다.
            코드 한 번 훑어보고 마무리 작업하자.
+
+> 2018.08.05
+  - title : 마무리 정리
+  - content : 클릭한 날짜 표시. 
+              키보드로 달력 전환.
+              CSS일부 수정.
+  - idea : 달력 전환하는 함수도.. get_month에서 for문 돌아가는 부분도.. 
+           분명히 DRY 한 코드가 아닌건 알겠는데, 어떻게 클린 코드로 리팩토링 해야될지 아직은 감이 잘 잡히지 않는다.
+           find_today하는 부분도, 동기적으로 getMonth다음에 실행하면 될 것도 같은데..
+           일단은 이렇게 마무리 짓고 다음 업데이트 때, 아쉬웠던 부분들 추가해서 보완하자.
+           그리고 충분히 공부할 것. ('promise, async/await' 부분 더 공부해 볼 것)

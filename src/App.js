@@ -23,7 +23,9 @@ class App extends Component {
     this._get_month()
   }
   componentDidUpdate(){
+    //Update 될 때, .today, .click을 다시 찾아주지 않으면 기존에 있던 자리에 그대로 남아있게 된다.
     this._find_today()
+    this._click_date()
   }
   render() {
     return (
@@ -63,27 +65,27 @@ class App extends Component {
     );
   }
 
-  _get_month = async () => {
+  _get_month = () => {
     const first = new Date(year, month -1 , 1),
           last = new Date(year, month, 0),
           dates = [],
           first_day = first.getDay(),
           last_day = last.getDay()
-    for(var be = first_day; be > 0; be--){
+    for(var be = first_day; be > 0; be--){ //첫째 주 이전 달 부분 
       const be_newDate = new Date(year, month -1, 1 - be),
             be_month = be_newDate.getMonth() + 1,
             be_date = be_newDate.getDate(),
             be_fulldate = be_newDate.toLocaleDateString()
       dates.push({month : be_month, date : be_date, fulldate : be_fulldate})
     }
-    for(var i = 1; i <= last.getDate(); i++){
+    for(var i = 1; i <= last.getDate(); i++){ // 이번달 부분
       const this_newDate = new Date(year, month -1 , i),
             this_month = this_newDate.getMonth() + 1,
             this_date = this_newDate.getDate(),
             this_fulldate = this_newDate.toLocaleDateString()
       dates.push({month : this_month, date : this_date, fulldate : this_fulldate, include: true})
     }
-    for(var af = 1; af < 7 - last_day; af++){
+    for(var af = 1; af < 7 - last_day; af++){ // 마지막 주 다음달 부분
       const af_newDate = new Date(year, month, af),
             af_month = af_newDate.getMonth() + 1,
             af_date = af_newDate.getDate(),
@@ -97,15 +99,15 @@ class App extends Component {
     })
   }
 
-  _next_month = () => {
-    today = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate())
+  _prev_month = () => {
+    today = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate())
     month = today.getMonth() + 1
     year = today.getFullYear()
     this._get_month()
   }
 
-  _prev_month = () => {
-    today = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate())
+  _next_month = () => {
+    today = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate())
     month = today.getMonth() + 1
     year = today.getFullYear()
     this._get_month()
@@ -128,9 +130,33 @@ class App extends Component {
       }
     }
   }
+  
   _click_date = (e) => {
-    console.log(e.target.dataset.fulldate)
+    const list = document.querySelectorAll('.dates')
+    for(var i = 1; i < list.length; i++){
+      list[i].classList.remove('click')
+    }
+    if(e){
+      e.target.classList.add('click')
+      console.log("선택한 날짜는 " + e.target.dataset.fulldate + " 입니다.")
+    }
   }
 }
 
 export default App;
+
+/* 키보드 화살표로 달력 전환 */
+document.addEventListener("keydown", keyPress);
+function keyPress(e) {
+  const value = e.key
+  const prev = document.querySelector(".prevBtn")
+  const next = document.querySelector(".nextBtn")
+
+  if(value === 'ArrowLeft' || value === 'ArrowUp'){
+    prev.click();
+    console.log('방향키로 이전 달(月)로 이동했습니다.')
+  } else if (value === 'ArrowRight' || value === 'ArrowDown') {
+    next.click();
+    console.log('방향키로 다음 달(月)로 이동했습니다.')
+  }
+}
