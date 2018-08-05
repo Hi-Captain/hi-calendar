@@ -5,7 +5,8 @@ import './App.css';
 
 let today = new Date(),
     month = today.getMonth() + 1,
-    year = today.getFullYear()
+    year = today.getFullYear(),
+    days = ['일', '월', '화', '수', '목', '금', '토']
 
 class App extends Component {
   constructor(props){
@@ -18,11 +19,8 @@ class App extends Component {
     }
   }
  
-  componentWillMount(){
-    this._get_month()
-  }
   componentDidMount(){
-    this._find_today()
+    this._get_month()
   }
   componentDidUpdate(){
     this._find_today()
@@ -31,28 +29,41 @@ class App extends Component {
     return (
       <div className="App">
         <header>
+          <div className="nowView">{this.state.thisYear}년 {this.state.thisMonth}월</div>
           <nav>
-            <div>{this.state.thisYear}년 {this.state.thisMonth}월</div>
-            <button onClick={this._prev_month}> ← </button>
-            <button onClick={this._back_today}> Today </button>
-            <button onClick={this._next_month}> → </button>
+            <button className="btn prevBtn" onClick={this._prev_month}> &lt; </button>
+            <button className="btn todayBtn" onClick={this._back_today}> Today </button>
+            <button className="btn nextBtn" onClick={this._next_month}> &gt; </button>
           </nav>
         </header>
         <section>
-          {this.state.thisDates.map((value, i) => {
-            return (
-              value.date === 1 ? <span className="dates" data-fulldate={value.fulldate} data-month={value.month} key={i}>{value.month}월 {value.date}일</span> : <span className="dates" data-fulldate={value.fulldate} data-month={value.month} key={i}>{value.date}일</span>
-            )
-          })}
+          <div className="days">
+            {days.map((value, i) => {
+              return <span className="day" key={i}>{value}</span>
+            })}
+          </div>
+          <div className="main">
+            {this.state.thisDates.map((value, i) => {
+              return (
+                <span className={value.include ? "dates include" : "dates others"} 
+                      onClick={this._click_date}
+                      data-fulldate={value.fulldate} 
+                      data-month={value.month}
+                      key={i}>
+                  {value.date === 1 ? value.month + '월 ' : ''}<b>{value.date}</b>일
+                </span>
+              )
+            })}
+          </div>
         </section>
-        <div>
+        {/* <div>
           오늘은 {this.state.now} 입니다.
-        </div>
+        </div> */}
       </div>
     );
   }
 
-  _get_month = () => {
+  _get_month = async () => {
     const first = new Date(year, month -1 , 1),
           last = new Date(year, month, 0),
           dates = [],
@@ -70,7 +81,7 @@ class App extends Component {
             this_month = this_newDate.getMonth() + 1,
             this_date = this_newDate.getDate(),
             this_fulldate = this_newDate.toLocaleDateString()
-      dates.push({month : this_month, date : this_date, fulldate : this_fulldate})
+      dates.push({month : this_month, date : this_date, fulldate : this_fulldate, include: true})
     }
     for(var af = 1; af < 7 - last_day; af++){
       const af_newDate = new Date(year, month, af),
@@ -116,6 +127,9 @@ class App extends Component {
         list[i].classList.add('today')
       }
     }
+  }
+  _click_date = (e) => {
+    console.log(e.target.dataset.fulldate)
   }
 }
 
